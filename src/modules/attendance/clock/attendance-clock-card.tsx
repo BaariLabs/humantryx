@@ -207,7 +207,6 @@ export function AttendanceClockCard() {
               <User className="text-primary h-4 w-4" />
             </div>
             <div>
-              {/* @ts-expect-error : too lazy to refactor queries  */}
               <div className="font-medium">{employee?.user?.name}</div>
               <div className="text-muted-foreground text-sm capitalize">
                 {employee?.designation.replace("_", " ")}
