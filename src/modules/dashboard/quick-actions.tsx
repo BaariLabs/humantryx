@@ -13,7 +13,6 @@ import {
   DollarSign,
   Calendar,
   FileText,
-  BarChart3,
   UserPlus,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -27,7 +26,6 @@ export function QuickActions() {
     router.push(route);
   };
 
-  // Define actions based on user abilities
   const actions = [
     ...(ability.can("manage", "Employee")
       ? [
@@ -35,33 +33,29 @@ export function QuickActions() {
             icon: UserPlus,
             title: "Invite Employee",
             description: "Onboard new team member",
-            route: "/dashboard/employees",
-            onClick: () => handleActionClick("/employees"),
+            onClick: () =>
+              handleActionClick("/dashboard/employees/invitations"),
           },
           {
             icon: Users,
             title: "Manage Employees",
             description: "View and manage staff",
-            route: "/dashboard/employees",
-            onClick: () => handleActionClick("/employees"),
+            onClick: () => handleActionClick("/dashboard/employees"),
           },
         ]
       : []),
 
-    // Payroll management (HR and Admin)
     ...(ability.can("manage", "Payroll") || ability.can("create", "Payroll")
       ? [
           {
             icon: DollarSign,
             title: "Process Payroll",
             description: "Generate monthly payroll",
-            route: "/dashboard/payroll",
-            onClick: () => handleActionClick("/payroll"),
+            onClick: () => handleActionClick("/dashboard/payroll"),
           },
         ]
       : []),
 
-    // Leave management (HR, Admin, and Project Managers)
     ...(ability.can("manage", "LeaveRequests") ||
     ability.can("update", "LeaveRequests")
       ? [
@@ -69,61 +63,41 @@ export function QuickActions() {
             icon: Calendar,
             title: "Approve Leaves",
             description: "Review pending requests",
-            route: "/leaves",
-            onClick: () => handleActionClick("/leaves"),
+            onClick: () => handleActionClick("/dashboard/leaves/requests"),
           },
         ]
       : []),
 
-    // Attendance management (available to most roles)
     ...(ability.can("create", "Attendance") || ability.can("read", "Attendance")
       ? [
           {
             icon: Clock,
             title: "Mark Attendance",
             description: "Record daily attendance",
-            route: "/dashboard/attendance",
-            onClick: () => handleActionClick("/attendance"),
+            onClick: () => handleActionClick("/dashboard/attendance"),
           },
         ]
       : []),
 
-    // Employee-specific actions
     ...(!ability.can("manage", "Employee") && !ability.can("update", "Employee")
       ? [
           {
             icon: FileText,
             title: "Request Leave",
             description: "Apply for time off",
-            route: "/leaves/request",
-            onClick: () => handleActionClick("/leaves/request"),
+            onClick: () => handleActionClick("/dashboard/leaves"),
           },
           {
             icon: Clock,
             title: "My Attendance",
             description: "View your attendance",
-            route: "/attendance/my",
-            onClick: () => handleActionClick("/attendance/my"),
+            onClick: () => handleActionClick("/dashboard/attendance"),
           },
           {
             icon: DollarSign,
             title: "My Payslips",
             description: "View salary details",
-            route: "/payroll/my",
-            onClick: () => handleActionClick("/payroll/my"),
-          },
-        ]
-      : []),
-
-    // Analytics for managers and above
-    ...(ability.can("update", "Employee") || ability.can("manage", "Employee")
-      ? [
-          {
-            icon: BarChart3,
-            title: "Analytics",
-            description: "View team insights",
-            route: "/analytics",
-            onClick: () => handleActionClick("/analytics"),
+            onClick: () => handleActionClick("/dashboard/payroll/payslips"),
           },
         ]
       : []),

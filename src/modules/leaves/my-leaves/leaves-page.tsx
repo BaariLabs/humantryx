@@ -63,7 +63,7 @@ export function LeavesPage() {
         </div>
 
         <div className="lg:col-span-2">
-          <MyLeaveStatsCard />
+          <MyLeaveStatsCard employeeId={employee?.id} />
         </div>
       </div>
 

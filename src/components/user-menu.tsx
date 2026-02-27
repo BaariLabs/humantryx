@@ -7,7 +7,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { User, Settings, LogOut, MessageSquare, Rocket } from "lucide-react";
+import { User, LogOut, Rocket } from "lucide-react";
 import { authClient, useSession } from "@/server/auth/auth-client";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
@@ -77,14 +77,6 @@ export function UserMenu() {
         <DropdownMenuItem onClick={() => setProfileDialogOpen(true)}>
           <User className="mr-2 h-4 w-4" />
           <span>Profile</span>
-        </DropdownMenuItem>
-        <DropdownMenuItem>
-          <Settings className="mr-2 h-4 w-4" />
-          <span>Settings</span>
-        </DropdownMenuItem>
-        <DropdownMenuItem>
-          <MessageSquare className="mr-2 h-4 w-4" />
-          <span>Support</span>
         </DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem onClick={handleSignOut}>

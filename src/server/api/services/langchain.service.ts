@@ -11,11 +11,8 @@ import {
   ChatPromptTemplate,
   MessagesPlaceholder,
 } from "@langchain/core/prompts";
-import { createStuffDocumentsChain } from "langchain/chains/combine_documents";
-import { createRetrievalChain } from "langchain/chains/retrieval";
 import { type Message as VercelChatMessage } from "ai";
 import AIPrompts from "@/server/ai/prompts";
-import { createHistoryAwareRetriever } from "langchain/chains/history_aware_retriever";
 import { AIMessage, HumanMessage } from "@langchain/core/messages";
 import { PineconeService } from "./pinecone.service";
 
