@@ -1,20 +1,11 @@
 "use client";
 
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Badge } from "@/components/ui/badge";
-import { Bell, Search, Shield } from "lucide-react";
+import { Search, Shield } from "lucide-react";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { UserMenu } from "@/components/user-menu";
 import { CommandPalette } from "@/components/command-palette";
+import { NotificationDropdown } from "@/components/notification-dropdown";
 
 interface SuperAdminTopNavProps {
   children: React.ReactNode;
@@ -66,42 +57,7 @@ export function SuperAdminTopNav({ children }: SuperAdminTopNavProps) {
 
           {/* Right Side Actions */}
           <div className="flex items-center space-x-4">
-            {/* Notifications */}
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="icon" className="relative">
-                  <Bell className="h-5 w-5" />
-                  <Badge
-                    variant="destructive"
-                    className="absolute -top-1 -right-1 h-5 w-5 rounded-full p-0 text-xs"
-                  >
-                    2
-                  </Badge>
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-80">
-                <DropdownMenuLabel>Notifications</DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem>
-                  <div className="flex flex-col space-y-1">
-                    <p className="text-sm font-medium">
-                      New organization created
-                    </p>
-                    <p className="text-muted-foreground text-xs">
-                      Tech Corp created a new organization
-                    </p>
-                  </div>
-                </DropdownMenuItem>
-                <DropdownMenuItem>
-                  <div className="flex flex-col space-y-1">
-                    <p className="text-sm font-medium">User reported</p>
-                    <p className="text-muted-foreground text-xs">
-                      A user has been reported for review
-                    </p>
-                  </div>
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+            <NotificationDropdown />
 
             <UserMenu />
           </div>

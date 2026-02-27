@@ -7,6 +7,7 @@ import {
   employeeSalarySettings,
   users,
 } from "@/server/db/schema";
+import { NotificationService } from "./notification.service";
 
 type Session = {
   user: { id: string };
@@ -206,6 +207,18 @@ export class PayrollService {
       })
       .returning();
 
+    const targetEmployee = await db.query.employees.findFirst({
+      where: eq(employees.id, input.employeeId),
+    });
+
+    if (targetEmployee?.userId && payroll) {
+      void NotificationService.notifyPayrollGenerated({
+        employeeUserId: targetEmployee.userId,
+        payrollMonth: input.payrollMonth,
+        netPay: payroll.netPay,
+      });
+    }
+
     return payroll;
   }
 
@@ -296,6 +309,20 @@ export class PayrollService {
         code: "NOT_FOUND",
         message: "Payroll record not found",
       });
+    }
+
+    if (input.status !== "pending") {
+      const targetEmployee = await db.query.employees.findFirst({
+        where: eq(employees.id, updated.employeeId),
+      });
+
+      if (targetEmployee?.userId) {
+        void NotificationService.notifyPaymentStatusUpdated({
+          employeeUserId: targetEmployee.userId,
+          payrollMonth: updated.payrollMonth,
+          status: input.status,
+        });
+      }
     }
 
     return updated;

@@ -2,17 +2,9 @@
 
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Badge } from "@/components/ui/badge";
-import { Bell, Search, Brain, HelpCircle } from "lucide-react";
+import { Search, Brain, HelpCircle } from "lucide-react";
 import { SidebarTrigger } from "@/components/ui/sidebar";
+import { NotificationDropdown } from "@/components/notification-dropdown";
 
 import { UserMenu } from "../../components/user-menu";
 import { CommandPalette } from "@/components/command-palette";
@@ -66,48 +58,7 @@ export function DashboardTopNav({ children }: DashboardTopNavProps) {
           </div>
 
           <div className="flex items-center space-x-4">
-            {/* Notifications */}
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="icon" className="relative">
-                  <Bell className="h-5 w-5" />
-                  <Badge
-                    variant="destructive"
-                    className="absolute -top-1 -right-1 h-5 w-5 rounded-full p-0 text-xs"
-                  >
-                    3
-                  </Badge>
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-80">
-                <DropdownMenuLabel>Notifications</DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem>
-                  <div className="flex flex-col space-y-1">
-                    <p className="text-sm font-medium">New leave request</p>
-                    <p className="text-muted-foreground text-xs">
-                      John Doe submitted a leave request for next week
-                    </p>
-                  </div>
-                </DropdownMenuItem>
-                <DropdownMenuItem>
-                  <div className="flex flex-col space-y-1">
-                    <p className="text-sm font-medium">Payroll reminder</p>
-                    <p className="text-muted-foreground text-xs">
-                      Monthly payroll processing due in 2 days
-                    </p>
-                  </div>
-                </DropdownMenuItem>
-                <DropdownMenuItem>
-                  <div className="flex flex-col space-y-1">
-                    <p className="text-sm font-medium">AI Analysis Ready</p>
-                    <p className="text-muted-foreground text-xs">
-                      Employee sentiment analysis report is ready
-                    </p>
-                  </div>
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+            <NotificationDropdown />
 
             {/* Help */}
             <Button variant="ghost" size="icon">

@@ -39,6 +39,7 @@ import { toast } from "sonner";
 import { signUpSchema, type SignUpSchemaType } from "./schemas/auth";
 import { Logo } from "@/components/logo";
 import { env } from "@/env";
+import { api } from "@/trpc/react";
 
 const passwordStrength = (password: string) => {
   let strength = 0;
@@ -93,8 +94,28 @@ export function SignUpForm() {
   const isPublicSignupAllowed = env.NEXT_PUBLIC_ALLOW_PUBLIC_SIGNUP;
   const isInvitationSignup = !!invitationId;
 
-  // If public signup is disabled and there's no invitation, show invitation-only message
-  if (!isPublicSignupAllowed && !isInvitationSignup) {
+  const hasUsersQuery = api.invitation.hasUsers.useQuery(undefined, {
+    enabled: !isPublicSignupAllowed && !isInvitationSignup,
+  });
+
+  const isFounderBootstrap = hasUsersQuery.data === false;
+
+  // If public signup is disabled, no invitation, and users already exist — block
+  if (!isPublicSignupAllowed && !isInvitationSignup && !isFounderBootstrap) {
+    if (hasUsersQuery.isLoading) {
+      return (
+        <div className="w-full max-w-lg">
+          <div className="mb-8 flex flex-col items-center space-y-2">
+            <Logo size="lg" />
+          </div>
+          <Card className="bg-card/80 border-0 shadow-2xl backdrop-blur-sm">
+            <CardContent className="flex items-center justify-center py-12">
+              <p className="text-muted-foreground text-sm">Loading...</p>
+            </CardContent>
+          </Card>
+        </div>
+      );
+    }
     return (
       <div className="w-full max-w-lg">
         <div className="mb-8 flex flex-col items-center space-y-2">

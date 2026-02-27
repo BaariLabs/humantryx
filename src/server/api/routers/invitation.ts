@@ -12,6 +12,8 @@ import {
   invitationByIdSchema,
 } from "@/modules/employees/schemas/invitation.schema";
 import { z } from "zod";
+import { sql } from "drizzle-orm";
+import { users } from "@/server/db/schema";
 
 export const invitationRouter = createTRPCRouter({
   // List invitations for an organization
@@ -131,4 +133,12 @@ export const invitationRouter = createTRPCRouter({
       const { id } = input;
       return await InvitationService.verifyInvitation(id);
     }),
+
+  // Check if any users exist (for founder bootstrap)
+  hasUsers: publicProcedure.query(async ({ ctx }) => {
+    const result = await ctx.db
+      .select({ count: sql<number>`count(*)::int` })
+      .from(users);
+    return (result[0]?.count ?? 0) > 0;
+  }),
 });

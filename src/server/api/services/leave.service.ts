@@ -1,7 +1,8 @@
 import { TRPCError } from "@trpc/server";
 import { and, eq, gte, lte, desc, asc, sql, inArray } from "drizzle-orm";
 import { db } from "@/server/db";
-import { employees, members } from "@/server/db/schema";
+import { employees, members, users } from "@/server/db/schema";
+import { NotificationService } from "./notification.service";
 import {
   leaveRequests,
   leaveBalances,
@@ -136,6 +137,19 @@ export class LeaveService {
         status: "pending",
       })
       .returning();
+
+    const user = await db.query.users.findFirst({
+      where: eq(users.id, session.user.id),
+      columns: { name: true },
+    });
+
+    void NotificationService.notifyLeaveRequested({
+      employeeId: employee.id,
+      employeeName: user?.name ?? "An employee",
+      leaveType: input.leaveType,
+      totalDays,
+      organizationId: employee.organizationId,
+    });
 
     return leaveRequest;
   }
@@ -309,6 +323,24 @@ export class LeaveService {
       );
     }
 
+    const requestEmployee = await db.query.employees.findFirst({
+      where: eq(employees.id, request.employeeId),
+    });
+    const approverUser = await db.query.users.findFirst({
+      where: eq(users.id, session.user.id),
+      columns: { name: true },
+    });
+
+    if (requestEmployee?.userId) {
+      void NotificationService.notifyLeaveStatusUpdated({
+        employeeUserId: requestEmployee.userId,
+        status: input.status as "approved" | "rejected",
+        leaveType: request.leaveType,
+        approverName: approverUser?.name ?? "HR",
+        rejectionReason: input.rejectionReason,
+      });
+    }
+
     return updatedRequest;
   }
 
@@ -474,6 +506,18 @@ export class LeaveService {
       })
       .where(eq(leaveBalances.id, balance.id))
       .returning();
+
+    const targetEmployee = await db.query.employees.findFirst({
+      where: eq(employees.id, employeeId),
+    });
+
+    if (targetEmployee?.userId) {
+      void NotificationService.notifyLeaveBalanceAdjusted({
+        employeeUserId: targetEmployee.userId,
+        leaveType,
+        adjustment,
+      });
+    }
 
     return updatedBalance;
   }
