@@ -877,9 +877,14 @@ export class LeaveService {
 
     const today = new Date().toISOString().split("T")[0]!;
 
+    const orgEmployeeIds = db
+      .select({ id: employees.id })
+      .from(employees)
+      .where(eq(employees.organizationId, activeOrgId));
+
     const onLeaveToday = await db.query.leaveRequests.findMany({
       where: and(
-        eq(leaveRequests.organizationId, activeOrgId),
+        inArray(leaveRequests.employeeId, orgEmployeeIds),
         eq(leaveRequests.status, "approved"),
         lte(leaveRequests.startDate, today),
         gte(leaveRequests.endDate, today),
@@ -900,7 +905,7 @@ export class LeaveService {
 
     const upcomingLeaves = await db.query.leaveRequests.findMany({
       where: and(
-        eq(leaveRequests.organizationId, activeOrgId),
+        inArray(leaveRequests.employeeId, orgEmployeeIds),
         eq(leaveRequests.status, "approved"),
         gte(leaveRequests.startDate, today),
         lte(leaveRequests.startDate, nextWeekStr),
