@@ -244,15 +244,11 @@ export class AttendanceService {
 
     // Date filters - dates are already normalized on frontend
     if (startDate) {
-      whereConditions.push(
-        gte(attendanceRecords.clockInTime, startDate),
-      );
+      whereConditions.push(gte(attendanceRecords.clockInTime, startDate));
     }
 
     if (endDate) {
-      whereConditions.push(
-        lte(attendanceRecords.clockInTime, endDate),
-      );
+      whereConditions.push(lte(attendanceRecords.clockInTime, endDate));
     }
 
     // Build base query options
@@ -266,16 +262,17 @@ export class AttendanceService {
         },
       },
       orderBy: [desc(attendanceRecords.clockInTime)],
-    };
+    } as const;
 
     // Add pagination if specified
-    const queryOptions = page !== undefined && limit !== undefined 
-      ? {
-          ...baseOptions,
-          limit,
-          offset: (page - 1) * limit,
-        }
-      : baseOptions;
+    const queryOptions =
+      page !== undefined && limit !== undefined
+        ? {
+            ...baseOptions,
+            limit,
+            offset: (page - 1) * limit,
+          }
+        : baseOptions;
 
     const records = await db.query.attendanceRecords.findMany(queryOptions);
 
