@@ -1,7 +1,8 @@
 import { pgEnum, pgTable, text, uuid } from "drizzle-orm/pg-core";
-import { exists, relations } from "drizzle-orm";
+import { relations } from "drizzle-orm";
 import { users } from "./users";
 import { organizations, members, invitations } from "./organizations";
+import { leaveBalances, leaveRequests } from "./leaves";
 import { timestamps } from "./columns";
 
 export const employeeStatusEnum = pgEnum("employee_status", [
@@ -54,7 +55,7 @@ export const employees = pgTable("employees", {
 });
 
 // Relations
-export const employeesRelations = relations(employees, ({ one }) => ({
+export const employeesRelations = relations(employees, ({ one, many }) => ({
   user: one(users, {
     fields: [employees.userId],
     references: [users.id],
@@ -70,6 +71,13 @@ export const employeesRelations = relations(employees, ({ one }) => ({
   invitation: one(invitations, {
     fields: [employees.invitationId],
     references: [invitations.id],
+  }),
+  leaveRequests: many(leaveRequests, {
+    relationName: "employee",
+  }),
+  leaveBalances: many(leaveBalances),
+  approvedLeaveRequests: many(leaveRequests, {
+    relationName: "approver",
   }),
 }));
 

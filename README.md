@@ -4,11 +4,7 @@
 
 [live url](https://humantryx.vercel.app) — [github](https://github.com/adarshacharya/humantryx)
 
-> **Humantryx** is an AI-powered Human Resource Management System built with Next.js and modern technologies. It streamlines HR processes including employee management, attendance tracking, leave management, and payroll processing, all enhanced with intelligent automation.
-
-## Demo
-
-[![YOUTUBE DEMO](https://img.youtube.com/vi/xuPdJo9f9Xw/0.jpg)](https://youtu.be/xuPdJo9f9Xw?si=FLN8Hj-rkEzWGPt8)
+> **Simplifiiq -hr**is an AI-powered Human Resource Management System built with Next.js and modern technologies. It streamlines HR processes including employee management, attendance tracking, leave management, and payroll processing, all enhanced with intelligent automation.
 
 ## Stack
 
@@ -86,23 +82,20 @@
    pnpm install
    cp .env.example .env
    ```
-
 3. Copy `.env.example` to `.env` and configure your environment variables.
-
 4. Set up the database:
 
    ```bash
    pnpm db:migrate    # Apply database schema
    pnpm db:seed    # Seed with initial data (currently not implemented)
    ```
-
 5. Run the development server:
 
    ```bash
    pnpm dev        # Start development server
    ```
-
 6. Build for production:
+
    ```bash
    pnpm build      # Create production build
    pnpm start      # Start production server
@@ -110,8 +103,8 @@
 
 ### Commands
 
-| Command           | Description                   |
-| ----------------- | ----------------------------- |
+| Command             | Description                   |
+| ------------------- | ----------------------------- |
 | `pnpm dev`        | Start local development       |
 | `pnpm build`      | Create a production build     |
 | `pnpm start`      | Start production server       |
@@ -143,14 +136,10 @@ docker build -t humantryx .
 docker-compose up -d
 ```
 
-## Contributing
-
-We welcome contributions! Please read our [Contributing Guide](CONTRIBUTING.md) for details on our code of conduct and the process for submitting pull requests.
-
 ## License
 
-MIT © 2025 Humantryx Team
+MIT © 2026 Simplifiiq Team
 
 ---
 
-> Built with ❤️ by [Adarsha Acharya](https://adarsha.dev) using modern web technologies for the future of HR management.
+> Built with ❤️ by [S](https://adarsha.dev)implifiq Team using modern web technologies for the future of HR management.

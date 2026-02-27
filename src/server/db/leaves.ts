@@ -94,12 +94,4 @@ export const leaveBalancesRelations = relations(leaveBalances, ({ one }) => ({
   }),
 }));
 
-export const employeesLeavesRelations = relations(employees, ({ many }) => ({
-  leaveRequests: many(leaveRequests, {
-    relationName: "employee",
-  }),
-  leaveBalances: many(leaveBalances),
-  approvedLeaveRequests: many(leaveRequests, {
-    relationName: "approver",
-  }),
-}));
+
