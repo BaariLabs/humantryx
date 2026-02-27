@@ -252,29 +252,31 @@ export class AttendanceService {
     }
 
     // Build base query options
-    const baseOptions = {
-      where: whereConditions.length > 0 ? and(...whereConditions) : undefined,
-      with: {
-        employee: {
-          with: {
-            user: true,
-          },
+    const withClause = {
+      employee: {
+        with: {
+          user: true as const,
         },
       },
-      orderBy: [desc(attendanceRecords.clockInTime)],
-    } as const;
+    };
+    const where =
+      whereConditions.length > 0 ? and(...whereConditions) : undefined;
+    const orderBy = [desc(attendanceRecords.clockInTime)];
 
-    // Add pagination if specified
-    const queryOptions =
+    const records =
       page !== undefined && limit !== undefined
-        ? {
-            ...baseOptions,
+        ? await db.query.attendanceRecords.findMany({
+            where,
+            with: withClause,
+            orderBy,
             limit,
             offset: (page - 1) * limit,
-          }
-        : baseOptions;
-
-    const records = await db.query.attendanceRecords.findMany(queryOptions);
+          })
+        : await db.query.attendanceRecords.findMany({
+            where,
+            with: withClause,
+            orderBy,
+          });
 
     // If pagination is requested, also get count
     if (page !== undefined && limit !== undefined) {

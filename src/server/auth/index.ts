@@ -98,9 +98,10 @@ export const auth = betterAuth({
           if (env.NEXT_PUBLIC_ALLOW_PUBLIC_SIGNUP) return;
 
           // Allow the very first user (founder bootstrap)
-          const [{ count }] = await db
+          const result = await db
             .select({ count: sql<number>`count(*)::int` })
             .from(schema.users);
+          const count = result[0]?.count ?? 0;
           if (count === 0) return;
 
           // Allow invitation-based sign-ups (referer contains invitation param)
