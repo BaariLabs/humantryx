@@ -2,18 +2,34 @@ import { jsPDF } from "jspdf";
 import autoTable from "jspdf-autotable";
 import type { PayrollRecordWithEmployee } from "../types";
 
-// Extend jsPDF type to include autoTable properties
 interface ExtendedJsPDF extends jsPDF {
   lastAutoTable?: {
     finalY: number;
   };
 }
 
+const BRAND = {
+  primary: [15, 82, 186] as [number, number, number],
+  primaryDark: [10, 60, 140] as [number, number, number],
+  accent: [45, 156, 219] as [number, number, number],
+  dark: [30, 30, 40] as [number, number, number],
+  text: [55, 55, 70] as [number, number, number],
+  lightText: [120, 120, 140] as [number, number, number],
+  sectionBg: [245, 247, 252] as [number, number, number],
+  white: [255, 255, 255] as [number, number, number],
+  border: [220, 225, 235] as [number, number, number],
+  earnings: [16, 124, 65] as [number, number, number],
+  earningsBg: [240, 253, 244] as [number, number, number],
+  deductions: [185, 28, 28] as [number, number, number],
+  deductionsBg: [254, 242, 242] as [number, number, number],
+  netPayBg: [238, 242, 255] as [number, number, number],
+};
+
 export class PayslipPDF {
   private doc: ExtendedJsPDF;
   private pageWidth: number;
   private pageHeight: number;
-  private margin = 15;
+  private margin = 18;
 
   constructor() {
     this.doc = new jsPDF() as ExtendedJsPDF;
@@ -27,7 +43,9 @@ export class PayslipPDF {
   ): void {
     this.addHeader(payrollRecord, organizationName);
     this.addEmployeeInfo(payrollRecord);
-    this.addPayrollDetailsTable(payrollRecord);
+    this.addEarningsAndDeductions(payrollRecord);
+    this.addNetPaySummary(payrollRecord);
+    this.addPaymentInfo(payrollRecord);
     this.addFooter(payrollRecord, organizationName);
   }
 
@@ -35,171 +53,149 @@ export class PayslipPDF {
     payrollRecord: PayrollRecordWithEmployee,
     organizationName?: string,
   ): void {
-    // Company Logo Area (smaller)
-    this.doc.setFillColor(59, 130, 246);
-    this.doc.rect(this.margin, this.margin, 25, 15, "F");
+    const contentWidth = this.pageWidth - 2 * this.margin;
 
-    // Company Logo Text (smaller)
-    this.doc.setTextColor(255, 255, 255);
-    this.doc.setFont("helvetica", "bold");
-    this.doc.setFontSize(10);
-    this.doc.text("ORG", this.margin + 6, this.margin + 9);
+    // Top accent bar
+    this.doc.setFillColor(...BRAND.primary);
+    this.doc.rect(0, 0, this.pageWidth, 4, "F");
 
-    // Company Name and Title (more compact)
-    this.doc.setTextColor(0, 0, 0);
+    // Company logo area
+    this.doc.setFillColor(...BRAND.primary);
+    this.doc.roundedRect(this.margin, 12, 32, 20, 3, 3, "F");
+    this.doc.setTextColor(...BRAND.white);
     this.doc.setFont("helvetica", "bold");
-    this.doc.setFontSize(14);
+    this.doc.setFontSize(11);
+    this.doc.text("Simplifiiq", this.margin + 3.5, 24);
+
+    // Organization name
+    this.doc.setTextColor(...BRAND.dark);
+    this.doc.setFont("helvetica", "bold");
+    this.doc.setFontSize(16);
     const orgName = organizationName || "Organization";
-    this.doc.text(orgName, this.margin + 30, this.margin + 12);
+    this.doc.text(orgName, this.margin + 38, 22);
 
     this.doc.setFont("helvetica", "normal");
     this.doc.setFontSize(8);
-    this.doc.text(
-      "Human Resource Management System",
-      this.margin + 30,
-      this.margin + 20,
-    );
+    this.doc.setTextColor(...BRAND.lightText);
+    this.doc.text("hr.simplifiiq.com", this.margin + 38, 29);
 
-    // Payslip Title and Date on the right (smaller)
+    // Payslip title block on right
     this.doc.setFont("helvetica", "bold");
-    this.doc.setFontSize(16);
-    this.doc.setTextColor(59, 130, 246);
-    this.doc.text(
-      "PAYSLIP",
-      this.pageWidth - this.margin - 40,
-      this.margin + 12,
-    );
+    this.doc.setFontSize(20);
+    this.doc.setTextColor(...BRAND.primary);
+    const titleX = this.pageWidth - this.margin;
+    this.doc.text("PAYSLIP", titleX, 20, { align: "right" });
 
-    // Pay period (smaller)
+    // Pay period
     const [year, month] = payrollRecord.payrollMonth.split("-");
     const payPeriod = new Date(
       parseInt(year || "2024"),
       parseInt(month || "1") - 1,
-    ).toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "long",
-    });
-
-    this.doc.setFont("helvetica", "normal");
-    this.doc.setFontSize(8);
-    this.doc.setTextColor(100, 100, 100);
-    this.doc.text(
-      `For: ${payPeriod}`,
-      this.pageWidth - this.margin - 40,
-      this.margin + 20,
-    );
-
-    // Add line separator (moved up)
-    this.doc.setDrawColor(200, 200, 200);
-    this.doc.setLineWidth(0.5);
-    this.doc.line(
-      this.margin,
-      this.margin + 30,
-      this.pageWidth - this.margin,
-      this.margin + 30,
-    );
-  }
-
-  private addEmployeeInfo(payrollRecord: PayrollRecordWithEmployee): void {
-    const startY = this.margin + 45;
-
-    // Employee Information Section (more compact)
-    this.doc.setFont("helvetica", "bold");
-    this.doc.setFontSize(11);
-    this.doc.setTextColor(0, 0, 0);
-    this.doc.text("Employee Information", this.margin, startY);
-
-    // Employee details in two columns (more compact)
-    const leftColumn = this.margin;
-    const rightColumn = this.pageWidth / 2 + 5;
-    const currentY = startY + 10;
+    ).toLocaleDateString("en-US", { year: "numeric", month: "long" });
 
     this.doc.setFont("helvetica", "normal");
     this.doc.setFontSize(9);
+    this.doc.setTextColor(...BRAND.lightText);
+    this.doc.text(payPeriod, titleX, 27, { align: "right" });
 
-    // Left column
-    this.doc.setFont("helvetica", "bold");
-    this.doc.text("Name:", leftColumn, currentY);
-    this.doc.setFont("helvetica", "normal");
-    this.doc.text(
-      payrollRecord.employee?.user?.name || "N/A",
-      leftColumn + 22,
-      currentY,
-    );
+    // Divider line
+    this.doc.setDrawColor(...BRAND.border);
+    this.doc.setLineWidth(0.6);
+    this.doc.line(this.margin, 38, this.margin + contentWidth, 38);
+  }
+
+  private addEmployeeInfo(payrollRecord: PayrollRecordWithEmployee): void {
+    const startY = 46;
+    const contentWidth = this.pageWidth - 2 * this.margin;
+    const halfWidth = contentWidth / 2 - 4;
+
+    // Employee details card
+    this.doc.setFillColor(...BRAND.sectionBg);
+    this.doc.roundedRect(this.margin, startY, contentWidth, 36, 3, 3, "F");
+
+    // Left column - Employee Info
+    const leftX = this.margin + 8;
+    let y = startY + 10;
 
     this.doc.setFont("helvetica", "bold");
-    this.doc.text("Email:", leftColumn, currentY + 8);
-    this.doc.setFont("helvetica", "normal");
-    this.doc.text(
-      payrollRecord.employee?.user?.email || "N/A",
-      leftColumn + 22,
-      currentY + 8,
-    );
+    this.doc.setFontSize(8);
+    this.doc.setTextColor(...BRAND.primary);
+    this.doc.text("EMPLOYEE DETAILS", leftX, y);
 
-    this.doc.setFont("helvetica", "bold");
-    this.doc.text("Designation:", leftColumn, currentY + 16);
+    y += 7;
     this.doc.setFont("helvetica", "normal");
+    this.doc.setFontSize(9);
+    this.doc.setTextColor(...BRAND.dark);
+    this.doc.text(payrollRecord.employee?.user?.name || "N/A", leftX, y);
+
+    y += 5.5;
+    this.doc.setFontSize(8);
+    this.doc.setTextColor(...BRAND.text);
+    this.doc.text(payrollRecord.employee?.user?.email || "N/A", leftX, y);
+
+    y += 5.5;
     const designation =
       payrollRecord.employee?.designation?.replace(/_/g, " ").toUpperCase() ||
       "N/A";
-    this.doc.text(designation, leftColumn + 30, currentY + 16);
+    this.doc.text(designation, leftX, y);
 
-    // Right column
+    // Right column - Pay Info
+    const rightX = this.margin + halfWidth + 12;
+    y = startY + 10;
+
     this.doc.setFont("helvetica", "bold");
-    this.doc.text("Employee ID:", rightColumn, currentY);
+    this.doc.setFontSize(8);
+    this.doc.setTextColor(...BRAND.primary);
+    this.doc.text("PAY INFORMATION", rightX, y);
+
+    y += 7;
+    this.doc.setFont("helvetica", "normal");
+    this.doc.setFontSize(8);
+    this.doc.setTextColor(...BRAND.text);
+
+    this.doc.setFont("helvetica", "bold");
+    this.doc.text("Employee ID:", rightX, y);
     this.doc.setFont("helvetica", "normal");
     this.doc.text(
       payrollRecord.employeeId.substring(0, 8).toUpperCase(),
-      rightColumn + 30,
-      currentY,
+      rightX + 28,
+      y,
     );
 
-    this.doc.setFont("helvetica", "bold");
-    this.doc.text("Pay Period:", rightColumn, currentY + 8);
-    this.doc.setFont("helvetica", "normal");
+    y += 5.5;
     const [year, month] = payrollRecord.payrollMonth.split("-");
     const payPeriod = new Date(
       parseInt(year || "2024"),
       parseInt(month || "1") - 1,
-    ).toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "long",
-    });
-    this.doc.text(payPeriod, rightColumn + 30, currentY + 8);
-
+    ).toLocaleDateString("en-US", { year: "numeric", month: "long" });
     this.doc.setFont("helvetica", "bold");
-    this.doc.text("Currency:", rightColumn, currentY + 16);
+    this.doc.text("Pay Period:", rightX, y);
     this.doc.setFont("helvetica", "normal");
-    this.doc.text(payrollRecord.currency, rightColumn + 30, currentY + 16);
+    this.doc.text(payPeriod, rightX + 24, y);
 
-    // Add line separator (closer)
-    this.doc.setDrawColor(200, 200, 200);
-    this.doc.setLineWidth(0.3);
-    this.doc.line(
-      this.margin,
-      startY + 32,
-      this.pageWidth - this.margin,
-      startY + 32,
-    );
+    y += 5.5;
+    this.doc.setFont("helvetica", "bold");
+    this.doc.text("Currency:", rightX, y);
+    this.doc.setFont("helvetica", "normal");
+    this.doc.text(payrollRecord.currency, rightX + 20, y);
   }
 
-  private addPayrollDetailsTable(
+  private addEarningsAndDeductions(
     payrollRecord: PayrollRecordWithEmployee,
   ): void {
-    const startY = this.margin + 90;
-
-    // Payroll Details Title (smaller)
-    this.doc.setFont("helvetica", "bold");
-    this.doc.setFontSize(11);
-    this.doc.setTextColor(0, 0, 0);
-    this.doc.text("Payroll Details", this.margin, startY);
-
-    // Prepare table data (more compact)
+    const startY = 90;
     const currency =
       payrollRecord.currency === "USD" ? "$" : payrollRecord.currency;
-    const tableData = [
-      // Earnings Section
-      ["EARNINGS", ""],
+    const contentWidth = this.pageWidth - 2 * this.margin;
+    const colWidth = contentWidth / 2 - 3;
+
+    // === EARNINGS TABLE (left side) ===
+    this.doc.setFont("helvetica", "bold");
+    this.doc.setFontSize(9);
+    this.doc.setTextColor(...BRAND.earnings);
+    this.doc.text("EARNINGS", this.margin, startY);
+
+    const earningsData = [
       [
         "Basic Salary",
         `${currency}${parseFloat(payrollRecord.baseSalary).toLocaleString()}`,
@@ -212,166 +208,250 @@ export class PayslipPDF {
         "Allowances",
         `${currency}${parseFloat(payrollRecord.allowances || "0").toLocaleString()}`,
       ],
-      ["", ""],
-      // Deductions Section
-      ["DEDUCTIONS", ""],
+    ];
+
+    autoTable(this.doc, {
+      startY: startY + 3,
+      head: [["Description", "Amount"]],
+      body: earningsData,
+      foot: [
+        [
+          "Total Earnings",
+          `${currency}${parseFloat(payrollRecord.grossPay).toLocaleString()}`,
+        ],
+      ],
+      theme: "plain",
+      tableWidth: colWidth,
+      margin: { left: this.margin },
+      headStyles: {
+        fillColor: BRAND.earningsBg,
+        textColor: BRAND.earnings,
+        fontStyle: "bold",
+        fontSize: 8,
+        cellPadding: 3,
+      },
+      bodyStyles: {
+        fontSize: 8,
+        textColor: BRAND.text,
+        cellPadding: 3,
+        lineColor: BRAND.border,
+        lineWidth: 0.2,
+      },
+      footStyles: {
+        fillColor: BRAND.earningsBg,
+        textColor: BRAND.earnings,
+        fontStyle: "bold",
+        fontSize: 9,
+        cellPadding: 3,
+      },
+      columnStyles: {
+        0: { halign: "left" },
+        1: { halign: "right" },
+      },
+    });
+
+    // === DEDUCTIONS TABLE (right side) ===
+    this.doc.setFont("helvetica", "bold");
+    this.doc.setFontSize(9);
+    this.doc.setTextColor(...BRAND.deductions);
+    this.doc.text("DEDUCTIONS", this.margin + colWidth + 6, startY);
+
+    const deductionsData = [
       [
-        "Tax Deduction (" + (payrollRecord.taxPercentage || "0") + "%)",
+        `Tax (${payrollRecord.taxPercentage || "0"}%)`,
         `${currency}${parseFloat(payrollRecord.taxDeduction || "0").toLocaleString()}`,
       ],
       [
-        "Leave Deduction (" + (payrollRecord.unpaidLeaveDays || 0) + " days)",
+        `Leave (${payrollRecord.unpaidLeaveDays || 0} days)`,
         `${currency}${parseFloat(payrollRecord.leaveDeduction || "0").toLocaleString()}`,
-      ],
-      ["", ""],
-      // Summary Section
-      ["SUMMARY", ""],
-      [
-        "Gross Pay",
-        `${currency}${parseFloat(payrollRecord.grossPay).toLocaleString()}`,
-      ],
-      [
-        "Total Deductions",
-        `${currency}${parseFloat(payrollRecord.totalDeductions).toLocaleString()}`,
-      ],
-      ["", ""],
-      // Final Amount
-      [
-        "NET PAY",
-        `${currency}${parseFloat(payrollRecord.netPay).toLocaleString()}`,
       ],
     ];
 
     autoTable(this.doc, {
-      startY: startY + 10,
+      startY: startY + 3,
       head: [["Description", "Amount"]],
-      body: tableData,
-      theme: "grid",
+      body: deductionsData,
+      foot: [
+        [
+          "Total Deductions",
+          `${currency}${parseFloat(payrollRecord.totalDeductions).toLocaleString()}`,
+        ],
+      ],
+      theme: "plain",
+      tableWidth: colWidth,
+      margin: { left: this.margin + colWidth + 6 },
       headStyles: {
-        fillColor: [59, 130, 246],
-        textColor: [255, 255, 255],
+        fillColor: BRAND.deductionsBg,
+        textColor: BRAND.deductions,
         fontStyle: "bold",
-        fontSize: 10,
-        halign: "center",
+        fontSize: 8,
+        cellPadding: 3,
       },
       bodyStyles: {
         fontSize: 8,
-        textColor: [60, 60, 60],
-        cellPadding: 2,
+        textColor: BRAND.text,
+        cellPadding: 3,
+        lineColor: BRAND.border,
+        lineWidth: 0.2,
+      },
+      footStyles: {
+        fillColor: BRAND.deductionsBg,
+        textColor: BRAND.deductions,
+        fontStyle: "bold",
+        fontSize: 9,
+        cellPadding: 3,
       },
       columnStyles: {
-        0: {
-          cellWidth: 110,
-          halign: "left",
-        },
-        1: {
-          cellWidth: 50,
-          halign: "right",
-        },
-      },
-      didParseCell: function (data) {
-        const text = data.cell.text[0];
-
-        // Style section headers
-        if (
-          text === "EARNINGS" ||
-          text === "DEDUCTIONS" ||
-          text === "SUMMARY"
-        ) {
-          data.cell.styles.fillColor = [245, 245, 245];
-          data.cell.styles.fontStyle = "bold";
-          data.cell.styles.textColor = [0, 0, 0];
-          data.cell.styles.halign = "center";
-          data.cell.styles.fontSize = 9;
-        }
-
-        // Style NET PAY row
-        if (
-          text === "NET PAY" ||
-          (data.column.index === 1 &&
-            text?.includes("$") &&
-            data.row.index === tableData.length - 1)
-        ) {
-          data.cell.styles.fillColor = [59, 130, 246];
-          data.cell.styles.fontStyle = "bold";
-          data.cell.styles.textColor = [255, 255, 255];
-          data.cell.styles.fontSize = 10;
-        }
-
-        // Style empty rows for spacing
-        if (text === "") {
-          data.cell.styles.fillColor = [255, 255, 255];
-          data.cell.styles.minCellHeight = 4;
-        }
+        0: { halign: "left" },
+        1: { halign: "right" },
       },
     });
+  }
+
+  private addNetPaySummary(payrollRecord: PayrollRecordWithEmployee): void {
+    const currency =
+      payrollRecord.currency === "USD" ? "$" : payrollRecord.currency;
+    const tableEndY = this.doc.lastAutoTable?.finalY ?? 160;
+    const summaryY = tableEndY + 12;
+    const contentWidth = this.pageWidth - 2 * this.margin;
+
+    // Net pay highlight box
+    this.doc.setFillColor(...BRAND.primary);
+    this.doc.roundedRect(this.margin, summaryY, contentWidth, 22, 3, 3, "F");
+
+    this.doc.setFont("helvetica", "bold");
+    this.doc.setFontSize(12);
+    this.doc.setTextColor(...BRAND.white);
+    this.doc.text("NET PAY", this.margin + 10, summaryY + 14);
+
+    const netPayText = `${currency}${parseFloat(payrollRecord.netPay).toLocaleString()}`;
+    this.doc.setFontSize(16);
+    this.doc.text(
+      netPayText,
+      this.pageWidth - this.margin - 10,
+      summaryY + 14.5,
+      { align: "right" },
+    );
+
+    // Breakdown below
+    const breakdownY = summaryY + 28;
+    this.doc.setFontSize(8);
+    this.doc.setTextColor(...BRAND.lightText);
+    this.doc.setFont("helvetica", "normal");
+    this.doc.text(
+      `Gross: ${currency}${parseFloat(payrollRecord.grossPay).toLocaleString()}  |  Deductions: ${currency}${parseFloat(payrollRecord.totalDeductions).toLocaleString()}  |  Working Days: ${payrollRecord.totalWorkingDays}`,
+      this.pageWidth / 2,
+      breakdownY,
+      { align: "center" },
+    );
+  }
+
+  private addPaymentInfo(payrollRecord: PayrollRecordWithEmployee): void {
+    const tableEndY = this.doc.lastAutoTable?.finalY ?? 160;
+    const infoY = tableEndY + 48;
+
+    if (payrollRecord.paymentDate || payrollRecord.paymentReference) {
+      this.doc.setFont("helvetica", "bold");
+      this.doc.setFontSize(8);
+      this.doc.setTextColor(...BRAND.primary);
+      this.doc.text("PAYMENT DETAILS", this.margin, infoY);
+
+      let y = infoY + 7;
+      this.doc.setFont("helvetica", "normal");
+      this.doc.setFontSize(8);
+      this.doc.setTextColor(...BRAND.text);
+
+      if (payrollRecord.paymentDate) {
+        this.doc.text(
+          `Payment Date: ${new Date(payrollRecord.paymentDate).toLocaleDateString()}`,
+          this.margin,
+          y,
+        );
+        y += 5;
+      }
+
+      if (payrollRecord.paymentReference) {
+        this.doc.text(
+          `Reference: ${payrollRecord.paymentReference}`,
+          this.margin,
+          y,
+        );
+      }
+    }
   }
 
   private addFooter(
     payrollRecord: PayrollRecordWithEmployee,
     organizationName?: string,
   ): void {
-    const tableEndY = this.doc.lastAutoTable?.finalY ?? 200;
-    const footerY = Math.max(tableEndY + 20, this.pageHeight - 40);
+    const footerY = this.pageHeight - 28;
 
-    // Notes section if available (more compact)
+    // Notes
     if (payrollRecord.notes) {
-      const notesY = footerY - 20;
+      const notesY = footerY - 18;
       this.doc.setFont("helvetica", "bold");
-      this.doc.setFontSize(8);
-      this.doc.setTextColor(0, 0, 0);
+      this.doc.setFontSize(7);
+      this.doc.setTextColor(...BRAND.dark);
       this.doc.text("Notes:", this.margin, notesY);
 
       this.doc.setFont("helvetica", "normal");
       this.doc.setFontSize(7);
-      this.doc.setTextColor(60, 60, 60);
+      this.doc.setTextColor(...BRAND.text);
       const lines = this.doc.splitTextToSize(
         payrollRecord.notes,
         this.pageWidth - 2 * this.margin,
       );
-      this.doc.text(lines, this.margin, notesY + 6);
+      this.doc.text(lines, this.margin, notesY + 5);
     }
 
-    // Add line separator
-    this.doc.setDrawColor(200, 200, 200);
+    // Bottom accent bar
+    this.doc.setFillColor(...BRAND.primary);
+    this.doc.rect(0, this.pageHeight - 4, this.pageWidth, 4, "F");
+
+    // Divider
+    this.doc.setDrawColor(...BRAND.border);
     this.doc.setLineWidth(0.3);
     this.doc.line(
       this.margin,
-      footerY - 8,
+      footerY - 4,
       this.pageWidth - this.margin,
-      footerY - 8,
+      footerY - 4,
     );
 
-    // Footer text - more compact
+    // Footer left
     this.doc.setFont("helvetica", "normal");
     this.doc.setFontSize(7);
-    this.doc.setTextColor(100, 100, 100);
-
+    this.doc.setTextColor(...BRAND.lightText);
     this.doc.text(
-      "This is a computer-generated payslip and does not require a signature.",
+      "This is a system-generated payslip and does not require a signature.",
       this.margin,
       footerY,
     );
 
     const generatedBy =
       payrollRecord.generatedByEmployee?.user?.name || "System";
-    this.doc.text(`Generated by: ${generatedBy}`, this.margin, footerY + 6);
-
-    // Footer text - right side
-    const payslipId = `Payslip ID: ${payrollRecord.id.substring(0, 8).toUpperCase()}`;
-    const payslipIdWidth = this.doc.getTextWidth(payslipId);
     this.doc.text(
-      payslipId,
-      this.pageWidth - this.margin - payslipIdWidth,
-      footerY,
+      `Generated by: ${generatedBy}  |  Payslip ID: ${payrollRecord.id.substring(0, 8).toUpperCase()}`,
+      this.margin,
+      footerY + 5,
     );
 
-    const companyText = `${organizationName || "Organization"} - Payroll System`;
+    // Footer right
+    const companyText = `${organizationName || "Organization"} — Powered by Simplifiiq`;
     const companyTextWidth = this.doc.getTextWidth(companyText);
     this.doc.text(
       companyText,
       this.pageWidth - this.margin - companyTextWidth,
-      footerY + 6,
+      footerY,
+    );
+
+    const urlText = "hr.simplifiiq.com";
+    const urlWidth = this.doc.getTextWidth(urlText);
+    this.doc.setTextColor(...BRAND.primary);
+    this.doc.text(
+      urlText,
+      this.pageWidth - this.margin - urlWidth,
+      footerY + 5,
     );
   }
 

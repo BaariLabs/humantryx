@@ -20,7 +20,7 @@ interface ResetPasswordEmailTemplateProps {
 export const ResetPasswordEmailTemplate = ({
   inviteLink,
 }: ResetPasswordEmailTemplateProps) => {
-  const previewText = `Reset Your Password - Humantryx HRMS`;
+  const previewText = `Reset Your Password - Simplifiiq HRMS`;
 
   return (
     <Html>
@@ -33,7 +33,7 @@ export const ResetPasswordEmailTemplate = ({
               <strong>Reset Your Password</strong>
             </Heading>
             <Text className="text-[14px] leading-[24px] text-black">
-              We received a request to reset your password for your Humantryx
+              We received a request to reset your password for your Simplifiiq
               account. Click the button below to create a new password.
             </Text>
             <Section className="mt-[32px] mb-[32px] text-center">

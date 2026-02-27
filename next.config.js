@@ -18,12 +18,14 @@ const config = {
     ],
   },
   async rewrites() {
-    return [
-      {
+    const rewrites = [];
+    if (env.NEXT_PUBLIC_C15T_URL) {
+      rewrites.push({
         source: "/api/c15t/:path*",
         destination: `${env.NEXT_PUBLIC_C15T_URL}/:path*`,
-      },
-    ];
+      });
+    }
+    return rewrites;
   },
 };
 

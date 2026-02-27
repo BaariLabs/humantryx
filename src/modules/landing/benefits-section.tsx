@@ -107,9 +107,9 @@ export function BenefitsSection() {
             transition={{ delay: 0.1 }}
             className="text-foreground mb-4 text-3xl font-bold sm:text-4xl lg:text-5xl"
           >
-            Why Companies Are{" "}
+            Why We Chose the{" "}
             <span className="from-primary to-primary/70 bg-gradient-to-r bg-clip-text text-transparent">
-              Making the Switch
+              AI-Powered Approach
             </span>
           </motion.h2>
 
@@ -120,9 +120,9 @@ export function BenefitsSection() {
             transition={{ delay: 0.2 }}
             className="text-muted-foreground mx-auto max-w-3xl text-lg"
           >
-            See the dramatic difference between traditional HR methods and our
-            AI-powered approach. The choice is clear when you compare side by
-            side.
+            See the dramatic difference between traditional HR methods and
+            Simplifi-IQ&apos;s AI-powered approach. Built for efficiency from
+            day one.
           </motion.p>
         </div>
 
@@ -179,7 +179,7 @@ export function BenefitsSection() {
                       variant="default"
                       className="bg-green-600 text-xs text-white hover:bg-green-700"
                     >
-                      Humantryx Way
+                      Simplifiiq Way
                     </Badge>
                     <div className="flex h-8 w-8 items-center justify-center rounded-full bg-green-100 dark:bg-green-900">
                       <comparison.modern.icon className="h-4 w-4 text-green-600 dark:text-green-400" />

@@ -104,7 +104,7 @@ export const EmployeeInvitationEmail = ({
               <Text className="text-sm text-[#6b7280]">
                 Best regards,
                 <br />
-                The Humantryx Team
+                The Simplifiiq Team
               </Text>
             </Section>
           </Container>

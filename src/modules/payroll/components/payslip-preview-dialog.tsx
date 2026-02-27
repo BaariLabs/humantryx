@@ -95,8 +95,8 @@ export function PayslipPreviewDialog({
             <CardHeader className="pb-3">
               <div className="flex items-center justify-between">
                 <div>
-                  <CardTitle className="text-xl text-blue-600">
-                    Humantryx
+                  <CardTitle className="text-primary text-xl">
+                    Simplifiiq
                   </CardTitle>
                   <p className="text-muted-foreground text-sm">
                     Human Resource Management System
@@ -173,13 +173,13 @@ export function PayslipPreviewDialog({
               </CardContent>
             </Card>
 
-            <Card className="border-blue-200 bg-blue-50">
+            <Card className="border-primary/20 bg-primary/5">
               <CardContent className="pt-6 pb-6">
                 <div className="text-center">
-                  <p className="mb-2 text-sm font-medium text-blue-800">
+                  <p className="text-primary mb-2 text-sm font-medium">
                     Net Pay
                   </p>
-                  <p className="text-3xl font-bold text-blue-600">
+                  <p className="text-primary text-3xl font-bold">
                     ${parseFloat(payrollRecord.netPay).toLocaleString()}
                   </p>
                 </div>
@@ -356,7 +356,7 @@ export function PayslipPreviewDialog({
           <Button
             onClick={handleDownload}
             disabled={isGenerating}
-            className="bg-blue-600 hover:bg-blue-700"
+            className="bg-primary hover:bg-primary/90"
             size="lg"
           >
             <Download className="mr-2 h-4 w-4" />

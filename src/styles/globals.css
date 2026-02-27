@@ -50,55 +50,55 @@
 :root {
   --radius: 0.75rem;
 
-  /* Modern Light Theme - Ocean Palette */
-  --background: oklch(0.99 0.003 240);
-  --foreground: oklch(0.15 0.01 240);
-  --card: oklch(0.98 0.008 240);
-  --card-foreground: oklch(0.15 0.01 240);
-  --popover: oklch(0.98 0.008 240);
-  --popover-foreground: oklch(0.15 0.01 240);
+  /* Simplifiiq Light Theme - Indigo Palette */
+  --background: oklch(0.99 0.002 270);
+  --foreground: oklch(0.13 0.015 270);
+  --card: oklch(0.98 0.006 270);
+  --card-foreground: oklch(0.13 0.015 270);
+  --popover: oklch(0.98 0.006 270);
+  --popover-foreground: oklch(0.13 0.015 270);
 
-  /* Primary - Deep Ocean Blue */
-  --primary: oklch(0.45 0.15 240);
-  --primary-foreground: oklch(0.98 0.002 240);
+  /* Primary - Deep Indigo */
+  --primary: oklch(0.42 0.17 265);
+  --primary-foreground: oklch(0.98 0.002 270);
 
-  /* Secondary - Soft Ocean Blue */
-  --secondary: oklch(0.96 0.008 240);
-  --secondary-foreground: oklch(0.25 0.01 240);
+  /* Secondary - Soft Lavender */
+  --secondary: oklch(0.95 0.012 270);
+  --secondary-foreground: oklch(0.22 0.015 270);
 
-  /* Muted - Ocean Gray */
-  --muted: oklch(0.94 0.005 240);
-  --muted-foreground: oklch(0.5 0.008 240);
+  /* Muted - Subtle Gray Violet */
+  --muted: oklch(0.94 0.006 270);
+  --muted-foreground: oklch(0.48 0.01 270);
 
-  /* Accent - Ocean Teal (more blue, less green) */
-  --accent: oklch(0.55 0.14 200);
-  --accent-foreground: oklch(0.98 0.002 240);
+  /* Accent - Vibrant Violet */
+  --accent: oklch(0.55 0.18 290);
+  --accent-foreground: oklch(0.98 0.002 270);
 
-  /* Destructive - Coral Red */
-  --destructive: oklch(0.55 0.18 15);
-  --destructive-foreground: oklch(0.98 0.002 240);
+  /* Destructive - Warm Red */
+  --destructive: oklch(0.53 0.19 20);
+  --destructive-foreground: oklch(0.98 0.002 270);
 
   /* Borders */
-  --border: oklch(0.9 0.01 240);
-  --input: oklch(0.95 0.008 240);
-  --ring: oklch(0.45 0.15 240);
+  --border: oklch(0.91 0.008 270);
+  --input: oklch(0.95 0.006 270);
+  --ring: oklch(0.42 0.17 265);
 
-  /* Chart Colors - Ocean Theme */
-  --chart-1: oklch(0.55 0.14 200);
-  --chart-2: oklch(0.45 0.15 240);
-  --chart-3: oklch(0.65 0.12 220);
-  --chart-4: oklch(0.7 0.1 250);
-  --chart-5: oklch(0.55 0.18 15);
+  /* Chart Colors - Indigo Palette */
+  --chart-1: oklch(0.55 0.18 290);
+  --chart-2: oklch(0.42 0.17 265);
+  --chart-3: oklch(0.6 0.14 250);
+  --chart-4: oklch(0.68 0.12 280);
+  --chart-5: oklch(0.53 0.19 20);
 
-  /* Sidebar - Ocean Theme */
-  --sidebar: oklch(0.97 0.008 240);
-  --sidebar-foreground: oklch(0.15 0.01 240);
-  --sidebar-primary: oklch(0.45 0.15 240);
-  --sidebar-primary-foreground: oklch(0.98 0.002 240);
-  --sidebar-accent: oklch(0.94 0.012 240);
-  --sidebar-accent-foreground: oklch(0.25 0.01 240);
-  --sidebar-border: oklch(0.9 0.012 240);
-  --sidebar-ring: oklch(0.45 0.15 240);
+  /* Sidebar - Indigo Theme */
+  --sidebar: oklch(0.97 0.008 270);
+  --sidebar-foreground: oklch(0.13 0.015 270);
+  --sidebar-primary: oklch(0.42 0.17 265);
+  --sidebar-primary-foreground: oklch(0.98 0.002 270);
+  --sidebar-accent: oklch(0.94 0.014 270);
+  --sidebar-accent-foreground: oklch(0.22 0.015 270);
+  --sidebar-border: oklch(0.91 0.01 270);
+  --sidebar-ring: oklch(0.42 0.17 265);
 }
 
 @layer base {
@@ -110,12 +110,12 @@
     background-image:
       radial-gradient(
         circle at 20% 80%,
-        oklch(0.6 0.12 180 / 0.08) 0%,
+        oklch(0.6 0.14 290 / 0.06) 0%,
         transparent 50%
       ),
       radial-gradient(
         circle at 80% 20%,
-        oklch(0.45 0.15 240 / 0.08) 0%,
+        oklch(0.42 0.17 265 / 0.06) 0%,
         transparent 50%
       );
   }

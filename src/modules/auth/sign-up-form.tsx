@@ -90,6 +90,59 @@ export function SignUpForm() {
     }
   }, [prefilledEmail, form]);
 
+  const isPublicSignupAllowed = env.NEXT_PUBLIC_ALLOW_PUBLIC_SIGNUP;
+  const isInvitationSignup = !!invitationId;
+
+  // If public signup is disabled and there's no invitation, show invitation-only message
+  if (!isPublicSignupAllowed && !isInvitationSignup) {
+    return (
+      <div className="w-full max-w-lg">
+        <div className="mb-8 flex flex-col items-center space-y-2">
+          <Logo size="lg" />
+        </div>
+        <Card className="bg-card/80 border-0 shadow-2xl backdrop-blur-sm">
+          <CardHeader className="pb-6">
+            <div className="bg-primary/10 mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full">
+              <Lock className="text-primary h-8 w-8" />
+            </div>
+            <CardTitle className="text-foreground text-center text-2xl">
+              Invitation Only
+            </CardTitle>
+            <CardDescription className="text-muted-foreground text-center">
+              Sign-up is currently restricted. You need an invitation from your
+              organization admin to create an account.
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="flex flex-col items-center gap-4">
+            <Button asChild className="w-full">
+              <Link href="/sign-in">
+                <ArrowRight className="mr-2 h-4 w-4" />
+                Go to Sign In
+              </Link>
+            </Button>
+            <p className="text-muted-foreground text-sm">
+              Already have an account?{" "}
+              <Link
+                href="/sign-in"
+                className="text-primary font-medium hover:underline"
+              >
+                Sign in here
+              </Link>
+            </p>
+          </CardContent>
+        </Card>
+        <div className="mt-8 text-center">
+          <Link
+            href="/"
+            className="text-muted-foreground hover:text-foreground text-sm"
+          >
+            ← Back to Home
+          </Link>
+        </div>
+      </div>
+    );
+  }
+
   const handleSubmit = async (values: SignUpSchemaType) => {
     if (!acceptTerms) {
       toast.error("Please accept the terms and conditions");

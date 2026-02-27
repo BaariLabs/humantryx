@@ -4,11 +4,14 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { PersonalDetails } from "@/modules/dashboard/personal-details";
 import { DashboardStats } from "@/modules/dashboard/dashboard-stats";
 import { QuickActions } from "@/modules/dashboard/quick-actions";
+import { TeamAvailability } from "@/modules/dashboard/team-availability";
 
 export default async function DashboardPage() {
   return (
     <div className="space-y-6">
       <PersonalDetails />
+
+      <TeamAvailability />
 
       <Suspense
         fallback={

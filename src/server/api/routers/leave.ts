@@ -143,4 +143,8 @@ export const leaveRouter = createTRPCRouter({
         ctx.session,
       );
     }),
+
+  getTeamAvailability: protectedProcedure.query(async ({ ctx }) => {
+    return LeaveService.getTeamAvailability(ctx.session);
+  }),
 });

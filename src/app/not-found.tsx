@@ -101,7 +101,7 @@ export default function NotFound() {
                   AI-Powered
                 </Badge>
                 <h2 className="text-foreground text-2xl font-semibold md:text-4xl">
-                  Humantryx
+                  Simplifiiq
                 </h2>
               </motion.div>
             </div>
@@ -160,7 +160,7 @@ export default function NotFound() {
               <span>Streamlining HR with AI since 2024</span>
             </div>
             <p className="text-muted-foreground/60 text-xs">
-              Humantryx - Where Technology Meets Human Resources
+              Simplifiiq - Where Technology Meets Human Resources
             </p>
           </motion.div>
         </motion.div>

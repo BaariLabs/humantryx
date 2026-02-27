@@ -12,8 +12,11 @@ export const env = createEnv({
       message: "BETTER_AUTH_SECRET must be set",
     }),
     BETTER_AUTH_URL: z.string().url(),
-    RESEND_API_KEY: z.string().min(1, {
-      message: "RESEND_API_KEY must be set",
+    EMAIL_USER: z.string().email({
+      message: "EMAIL_USER must be a valid email address",
+    }),
+    EMAIL_PASS: z.string().min(1, {
+      message: "EMAIL_PASS must be set",
     }),
     EMAIL_FROM: z.string().email({
       message: "EMAIL_FROM must be a valid email address",
@@ -37,17 +40,15 @@ export const env = createEnv({
     UPSTASH_REDIS_REST_TOKEN: z.string().min(1, {
       message: "UPSTASH_REDIS_REST_TOKEN must be set",
     }),
-    GROQ_API_KEY: z.string().min(1, {
-      message: "GROQ_API_KEY must be set",
-    }),
+    GROQ_API_KEY: z.string().min(1).optional(),
     PINECONE_API_KEY: z.string().min(1, {
       message: "PINECONE_API_KEY must be set",
     }),
     PINECONE_INDEX: z.string().min(1, {
       message: "PINECONE_INDEX must be set",
     }),
-    OPENAI_API_KEY: z.string().min(1, {
-      message: "OPENAI_API_KEY must be set",
+    GOOGLE_API_KEY: z.string().min(1, {
+      message: "GOOGLE_API_KEY must be set",
     }),
   },
 
@@ -64,7 +65,11 @@ export const env = createEnv({
       message: "R2_BUCKET_NAME must be set",
     }),
     NEXT_PUBLIC_R2_PUBLIC_URL: z.string().url(),
-    NEXT_PUBLIC_C15T_URL: z.string().url(),
+    NEXT_PUBLIC_C15T_URL: z.string().url().optional(),
+    NEXT_PUBLIC_ALLOW_PUBLIC_SIGNUP: z
+      .enum(["true", "false"])
+      .default("false")
+      .transform((val) => val === "true"),
   },
 
   /**
@@ -78,7 +83,8 @@ export const env = createEnv({
     BETTER_AUTH_URL: process.env.BETTER_AUTH_URL,
     NEXT_PUBLIC_BETTER_AUTH_URL: process.env.NEXT_PUBLIC_BETTER_AUTH_URL,
     BETTER_AUTH_SECRET: process.env.BETTER_AUTH_SECRET,
-    RESEND_API_KEY: process.env.RESEND_API_KEY,
+    EMAIL_USER: process.env.EMAIL_USER,
+    EMAIL_PASS: process.env.EMAIL_PASS,
     EMAIL_FROM: process.env.EMAIL_FROM,
     EMAIL_VERIFICATION_CALLBACK_URL:
       process.env.EMAIL_VERIFICATION_CALLBACK_URL,
@@ -94,8 +100,9 @@ export const env = createEnv({
     GROQ_API_KEY: process.env.GROQ_API_KEY,
     PINECONE_API_KEY: process.env.PINECONE_API_KEY,
     PINECONE_INDEX: process.env.PINECONE_INDEX,
-    OPENAI_API_KEY: process.env.OPENAI_API_KEY,
+    GOOGLE_API_KEY: process.env.GOOGLE_API_KEY,
     NEXT_PUBLIC_C15T_URL: process.env.NEXT_PUBLIC_C15T_URL,
+    NEXT_PUBLIC_ALLOW_PUBLIC_SIGNUP: process.env.NEXT_PUBLIC_ALLOW_PUBLIC_SIGNUP,
   },
   /**
    * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation. This is especially

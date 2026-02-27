@@ -821,4 +821,61 @@ export class LeaveService {
       ...result,
     };
   }
+
+  static async getTeamAvailability(session: Session) {
+    const activeOrgId = session.session.activeOrganizationId;
+    if (!activeOrgId) {
+      throw new TRPCError({
+        code: "FORBIDDEN",
+        message: "No active organization found",
+      });
+    }
+
+    const today = new Date().toISOString().split("T")[0]!;
+
+    const onLeaveToday = await db.query.leaveRequests.findMany({
+      where: and(
+        eq(leaveRequests.status, "approved"),
+        lte(leaveRequests.startDate, today),
+        gte(leaveRequests.endDate, today),
+      ),
+      with: {
+        employee: {
+          with: {
+            user: true,
+          },
+        },
+      },
+      orderBy: [asc(leaveRequests.endDate)],
+    });
+
+    const nextWeek = new Date();
+    nextWeek.setDate(nextWeek.getDate() + 7);
+    const nextWeekStr = nextWeek.toISOString().split("T")[0]!;
+
+    const upcomingLeaves = await db.query.leaveRequests.findMany({
+      where: and(
+        eq(leaveRequests.status, "approved"),
+        gte(leaveRequests.startDate, today),
+        lte(leaveRequests.startDate, nextWeekStr),
+      ),
+      with: {
+        employee: {
+          with: {
+            user: true,
+          },
+        },
+      },
+      orderBy: [asc(leaveRequests.startDate)],
+    });
+
+    const upcomingFiltered = upcomingLeaves.filter(
+      (leave) => !onLeaveToday.some((todayLeave) => todayLeave.id === leave.id),
+    );
+
+    return {
+      onLeaveToday,
+      upcomingLeaves: upcomingFiltered,
+    };
+  }
 }

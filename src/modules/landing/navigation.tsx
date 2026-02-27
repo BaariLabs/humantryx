@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { motion } from "motion/react";
 import { Button } from "@/components/ui/button";
-import { Menu, X, Users, BarChart3, Brain, Github } from "lucide-react";
+import { Menu, X, Users, BarChart3, Brain, ExternalLink } from "lucide-react";
 import Link from "next/link";
 import { useSession } from "@/server/auth/auth-client";
 import { UserMenu } from "../../components/user-menu";
@@ -18,9 +18,9 @@ export function Navigation() {
     { name: "Demo", href: "#showcase", icon: Brain },
     { name: "Benefits", href: "#benefits", icon: BarChart3 },
     {
-      name: "GitHub",
-      href: "https://github.com/adarshaacharya/humantryx",
-      icon: Github,
+      name: "Website",
+      href: "https://www.simplifiiq.com",
+      icon: ExternalLink,
       external: true,
     },
   ];

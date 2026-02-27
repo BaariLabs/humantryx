@@ -7,7 +7,7 @@ import {
   ArrowRight,
   Brain,
   Users,
-  TrendingUp,
+  Zap,
   Shield,
   CheckCircle,
 } from "lucide-react";
@@ -44,7 +44,7 @@ export function HeroSection() {
               className="border-primary/20 bg-primary/5 px-4 py-2 text-sm shadow-lg backdrop-blur-sm"
             >
               <Brain className="text-primary mr-2 h-4 w-4" />
-              AI-First HRMS Platform
+              Simplifi-IQ Internal HRMS
             </Badge>
           </motion.div>
 
@@ -55,9 +55,9 @@ export function HeroSection() {
             transition={{ delay: 0.1 }}
             className="text-foreground mb-6 text-4xl leading-[1.1] font-bold tracking-tight sm:mb-8 sm:text-5xl lg:text-6xl xl:text-7xl"
           >
-            The Future of HR is{" "}
+            Powering Growth with{" "}
             <span className="from-primary via-accent to-primary bg-gradient-to-r bg-clip-text text-transparent">
-              AI-Powered
+              Tech, Talent & AI
             </span>
           </motion.h1>
 
@@ -68,9 +68,9 @@ export function HeroSection() {
             transition={{ delay: 0.2 }}
             className="text-muted-foreground mx-auto mb-10 max-w-2xl text-lg leading-relaxed sm:mb-12 sm:text-xl"
           >
-            Replace traditional HR systems with intelligent automation. Cut
-            administrative workload by 80% while delivering exceptional employee
-            experiences.
+            Our AI-powered HRMS streamlines employee management, automates
+            processes, and unlocks 3X efficiency — built by Simplifi-IQ for
+            Simplifi-IQ.
           </motion.p>
 
           {/* Feature List */}
@@ -105,13 +105,13 @@ export function HeroSection() {
               whileTap={{ scale: 0.95 }}
               transition={{ type: "spring", stiffness: 400, damping: 17 }}
             >
-              <Link href="/sign-up">
+              <Link href="/sign-in">
                 <Button
                   size="lg"
                   className="group from-primary via-primary to-primary/80 shadow-primary/25 hover:shadow-primary/30 relative h-14 overflow-hidden bg-gradient-to-r px-8 text-base font-semibold shadow-lg transition-all duration-300 hover:shadow-xl sm:h-16 sm:px-10 sm:text-lg"
                 >
                   <span className="relative z-10 flex items-center">
-                    Get Started Today
+                    Sign In to Dashboard
                     <ArrowRight className="ml-2 h-5 w-5 transition-transform duration-300 group-hover:translate-x-1" />
                   </span>
                   <div className="from-primary/10 absolute inset-0 bg-gradient-to-r to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
@@ -129,14 +129,12 @@ export function HeroSection() {
                 size="lg"
                 className="group border-primary/20 bg-background/80 hover:border-primary/50 hover:bg-primary/5 relative h-14 overflow-hidden border-2 px-8 text-base font-semibold backdrop-blur-sm transition-all duration-300 hover:shadow-lg sm:h-16 sm:px-10 sm:text-lg"
                 onClick={() =>
-                  window.open("https://youtu.be/xuPdJo9f9Xw", "_blank")
+                  window.open("https://www.simplifiiq.com", "_blank")
                 }
               >
                 <span className="relative z-10 flex items-center">
-                  <div className="bg-primary/10 group-hover:bg-primary/20 mr-3 flex h-6 w-6 items-center justify-center rounded-full transition-colors duration-300">
-                    <div className="border-l-primary h-0 w-0 border-t-[4px] border-r-0 border-b-[4px] border-l-[6px] border-t-transparent border-b-transparent" />
-                  </div>
-                  Watch Demo
+                  Visit Simplifi-IQ
+                  <ArrowRight className="ml-2 h-5 w-5 transition-transform duration-300 group-hover:translate-x-1" />
                 </span>
                 <div className="from-primary/5 absolute inset-0 bg-gradient-to-r to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
               </Button>
@@ -152,7 +150,7 @@ export function HeroSection() {
           >
             {[
               { icon: Users, stat: "3x", label: "Faster Onboarding" },
-              { icon: TrendingUp, stat: "80%", label: "Workload Reduction" },
+              { icon: Zap, stat: "80%", label: "Workload Reduction" },
               { icon: Brain, stat: "24/7", label: "AI-Powered Support" },
               { icon: Shield, stat: "99.9%", label: "Uptime Guarantee" },
             ].map((item, index) => (

@@ -19,7 +19,7 @@ interface VerificationEmailTemplateProps {
 
 export const VerificationEmailTemplate = ({
   inviteLink,
-  companyName = "Humantryx",
+  companyName = "Simplifiiq",
 }: VerificationEmailTemplateProps) => {
   const previewText = `Verify your email address for ${companyName} platform.`;
 
@@ -46,7 +46,7 @@ export const VerificationEmailTemplate = ({
                 href={inviteLink}
                 className="rounded-lg bg-[#4f46e5] px-6 py-3 text-base font-semibold text-white no-underline"
               >
-                Verify Email 
+                Verify Email
               </Button>
             </Section>
 
@@ -110,5 +110,5 @@ export const VerificationEmailTemplate = ({
 
 VerificationEmailTemplate.PreviewProps = {
   inviteLink: "http://localhost:3000/verify-email?token=sample-token",
-  companyName: "Humantryx",
+  companyName: "Simplifiiq",
 };

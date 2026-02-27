@@ -26,6 +26,15 @@ export default async function authMiddleware(request: NextRequest) {
   const isOrganizationRoute = organizationRoutes.includes(pathName);
   const isAdminRoute = pathName.startsWith("/admin");
 
+  // Block public sign-up in production (allow invitation-based sign-ups)
+  if (
+    pathName === "/sign-up" &&
+    !env.NEXT_PUBLIC_ALLOW_PUBLIC_SIGNUP &&
+    !nextUrl.searchParams.get("invitation")
+  ) {
+    return NextResponse.redirect(new URL("/sign-in", request.url));
+  }
+
   const { data: session } = await betterFetch<Session>(
     "/api/auth/get-session",
     {

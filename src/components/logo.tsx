@@ -81,7 +81,7 @@ export function Logo({
         )}
       >
         <div className="relative">
-          <span className={cn("font-bold text-white", config.icon)}>H</span>
+          <span className={cn("font-bold text-white", config.icon)}>S</span>
           <div
             className={cn(
               "bg-accent absolute -top-1 -right-1 animate-pulse rounded-full",
@@ -100,7 +100,7 @@ export function Logo({
         config.text,
       )}
     >
-      Humantryx
+      Simplifiiq
     </span>
   );
 

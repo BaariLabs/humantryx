@@ -15,7 +15,7 @@ import {
 } from "@/server/auth/email";
 import { env } from "@/env";
 import { organization } from "better-auth/plugins";
-import { eq } from "drizzle-orm";
+import { eq, sql } from "drizzle-orm";
 
 export const auth = betterAuth({
   database: drizzleAdapter(db, {
@@ -92,6 +92,25 @@ export const auth = betterAuth({
   socialProviders: {},
   advanced: {},
   databaseHooks: {
+    user: {
+      create: {
+        before: async (_user, context) => {
+          if (env.NEXT_PUBLIC_ALLOW_PUBLIC_SIGNUP) return;
+
+          // Allow the very first user (founder bootstrap)
+          const [{ count }] = await db
+            .select({ count: sql<number>`count(*)::int` })
+            .from(schema.users);
+          if (count === 0) return;
+
+          // Allow invitation-based sign-ups (referer contains invitation param)
+          const referer = context?.headers?.get("referer") ?? "";
+          if (referer.includes("invitation=")) return;
+
+          return false;
+        },
+      },
+    },
     session: {
       create: {
         before: async (session) => {

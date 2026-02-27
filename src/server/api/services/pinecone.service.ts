@@ -1,5 +1,5 @@
 import { env } from "@/env";
-import { getOpenAIEmbeddings } from "@/lib/server/ai-models";
+import { getGeminiEmbeddings } from "@/lib/server/ai-models";
 import { initPinecone } from "@/lib/server/pinecone";
 import { PineconeStore } from "@langchain/pinecone";
 import { TRPCError } from "@trpc/server";
@@ -19,14 +19,14 @@ export class PineconeService {
   static async embedFile(documents: Document[]) {
     const pinecone = initPinecone();
 
-    const openAIEmbeddings = getOpenAIEmbeddings();
+    const geminiEmbeddings = getGeminiEmbeddings();
 
     const pineconeIndex = (await pinecone).Index(env.PINECONE_INDEX);
 
     // todo: add namespace
     const vectorStore = await PineconeStore.fromDocuments(
       documents,
-      openAIEmbeddings,
+      geminiEmbeddings,
       {
         onFailedAttempt: (error) => {
           console.error("Failed to embed document:", error);
@@ -48,12 +48,12 @@ export class PineconeService {
   static async retrieveDocumentChunks(topK = 5, organizationId: string) {
     const pinecone = initPinecone();
 
-    const openAIEmbeddings = getOpenAIEmbeddings();
+    const geminiEmbeddings = getGeminiEmbeddings();
 
     const pineconeIndex = (await pinecone).Index(env.PINECONE_INDEX);
 
     const vectorStore = await PineconeStore.fromExistingIndex(
-      openAIEmbeddings,
+      geminiEmbeddings,
       {
         pineconeIndex,
         // Always filter by organizationId for multi-tenant security

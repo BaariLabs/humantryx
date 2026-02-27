@@ -36,7 +36,7 @@ export function DashboardTopNav({ children }: DashboardTopNavProps) {
                 <div className="bg-accent absolute -top-0.5 -right-0.5 h-2 w-2 rounded-full" />
               </div>
               <span className="text-foreground text-lg font-bold">
-                Humantryx
+                Simplifiiq
               </span>
             </Link>
           </div>

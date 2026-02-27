@@ -85,7 +85,7 @@ export function VideoShowcaseSection() {
             </span>
           </h2>
           <p className="text-muted-foreground mx-auto max-w-3xl text-lg md:text-xl">
-            Watch how Humantryx transforms traditional HR processes with
+            Watch how Simplifiiq transforms traditional HR processes with
             cutting-edge AI technology. Every feature is designed to save time,
             reduce bias, and enhance decision-making.
           </p>

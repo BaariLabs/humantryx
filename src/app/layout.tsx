@@ -15,10 +15,10 @@ import { Analytics } from "@vercel/analytics/next";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
 
 export const metadata: Metadata = {
-  title: "Humantryx | AI Powered Human Resource Management System",
+  title: "Simplifiiq | AI Powered Human Resource Management System",
   description:
     "A comprehensive HRMS solution leveraging AI for enhanced efficiency.",
-  icons: [{ rel: "icon", url: "/favicon.ico" }],
+  icons: [{ rel: "icon", url: "/Simplifi-IQ-favicon.svg", type: "image/svg+xml" }],
 };
 
 const geist = Geist({
@@ -30,8 +30,8 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" className={`${geist.variable}`}>
-      <body>
+    <html lang="en" className={`${geist.variable}`} suppressHydrationWarning>
+      <body suppressHydrationWarning>
         <NuqsAdapter>
           <TRPCReactProvider>
             <AbilityProvider>

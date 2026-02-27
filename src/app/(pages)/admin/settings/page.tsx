@@ -28,8 +28,8 @@ export default function Settings() {
               <Label htmlFor="system-name">System Name</Label>
               <Input
                 id="system-name"
-                placeholder="Humantryx"
-                defaultValue="Humantryx"
+                placeholder="Simplifiiq"
+                defaultValue="Simplifiiq"
               />
             </div>
 

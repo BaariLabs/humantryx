@@ -8,10 +8,11 @@ import {
   ArrowRight,
   Check,
   Brain,
-  Calendar,
   Mail,
   Sparkles,
-  LinkedinIcon,
+  Linkedin,
+  Phone,
+  ExternalLink,
 } from "lucide-react";
 import Link from "next/link";
 
@@ -69,7 +70,7 @@ export function CTASection() {
                   className="border-primary/20 bg-primary/5 border px-4 py-2"
                 >
                   <Brain className="mr-2 h-4 w-4" />
-                  Ready to Get Started?
+                  Your Internal HRMS
                 </Badge>
               </motion.div>
 
@@ -80,9 +81,9 @@ export function CTASection() {
                 transition={{ delay: 0.1 }}
                 className="text-foreground mb-3 text-xl leading-tight font-bold sm:mb-4 sm:text-2xl lg:text-3xl"
               >
-                Transform Your HR Operations{" "}
+                Simplifi-IQ HR{" "}
                 <span className="from-primary to-primary/70 bg-gradient-to-r bg-clip-text text-transparent">
-                  Today
+                  Management Portal
                 </span>
               </motion.h2>
 
@@ -93,8 +94,8 @@ export function CTASection() {
                 transition={{ delay: 0.2 }}
                 className="text-muted-foreground mx-auto mb-6 max-w-xl text-sm leading-relaxed sm:mb-8 sm:text-base lg:text-lg"
               >
-                Join the revolution in HR management. Experience the power of
-                AI-driven automation and seamless employee experiences.
+                Access the AI-powered HRMS built exclusively for Simplifi-IQ.
+                Sign in to manage employees, attendance, payroll, and more.
               </motion.p>
 
               <motion.div
@@ -126,12 +127,12 @@ export function CTASection() {
                   whileTap={{ scale: 0.95 }}
                   transition={{ type: "spring", stiffness: 400, damping: 17 }}
                 >
-                  <Link href="/sign-up">
+                  <Link href="/sign-in">
                     <Button
                       size="lg"
                       className="h-11 w-full px-6 text-sm font-semibold shadow-lg sm:h-12 sm:w-auto sm:px-8 sm:text-base"
                     >
-                      Start For Free
+                      Sign In to Dashboard
                       <ArrowRight className="ml-2 h-4 w-4" />
                     </Button>
                   </Link>
@@ -141,18 +142,20 @@ export function CTASection() {
                   whileTap={{ scale: 0.95 }}
                   transition={{ type: "spring", stiffness: 400, damping: 17 }}
                 >
-                  <Button
-                    variant="outline"
-                    size="lg"
-                    className="border-primary/20 hover:border-primary/50 h-11 w-full border-2 px-6 text-sm font-semibold sm:h-12 sm:w-auto sm:px-8 sm:text-base"
-                    onClick={() => {
-                      window.location.href =
-                        "https://cal.com/adarshaacharya/schedule";
-                    }}
+                  <a
+                    href="https://www.simplifiiq.com"
+                    target="_blank"
+                    rel="noopener noreferrer"
                   >
-                    <Calendar className="mr-2 h-4 w-4" />
-                    Schedule Demo
-                  </Button>
+                    <Button
+                      variant="outline"
+                      size="lg"
+                      className="border-primary/20 hover:border-primary/50 h-11 w-full border-2 px-6 text-sm font-semibold sm:h-12 sm:w-auto sm:px-8 sm:text-base"
+                    >
+                      <ExternalLink className="mr-2 h-4 w-4" />
+                      Visit Simplifi-IQ
+                    </Button>
+                  </a>
                 </motion.div>
               </motion.div>
 
@@ -163,7 +166,7 @@ export function CTASection() {
                 transition={{ delay: 0.5 }}
                 className="text-muted-foreground mt-4 text-xs sm:mt-6 sm:text-sm"
               >
-                No credit card required • Setup in minutes • Cancel anytime
+                Invitation-only access • Contact HR for onboarding
               </motion.p>
             </CardContent>
 
@@ -182,28 +185,36 @@ export function CTASection() {
           className="mt-8 text-center sm:mt-12"
         >
           <p className="text-muted-foreground mb-3 text-sm sm:mb-4">
-            For further inquiries or project collaborations, feel free to reach
-            out.
+            For inquiries or support, reach out to the Simplifi-IQ team.
           </p>
           <div className="flex flex-row items-center justify-center gap-3 sm:gap-6">
             <div className="text-muted-foreground flex items-center text-sm">
               <Mail className="mr-2 h-3 w-3 sm:h-4 sm:w-4" />
               <a
-                href="mailto:hi@adarsha.dev"
+                href="mailto:contact@simplifiiq.com"
                 className="text-muted-foreground hover:text-primary transition-colors hover:underline"
               >
-                hi@adarsha.dev
+                contact@simplifiiq.com
               </a>
             </div>
             <div className="text-muted-foreground flex items-center text-sm">
-              <LinkedinIcon className="mr-2 h-3 w-3 sm:h-4 sm:w-4" />
+              <Phone className="mr-2 h-3 w-3 sm:h-4 sm:w-4" />
               <a
-                href="https://www.linkedin.com/in/adarshaacharya/"
+                href="tel:+971504767628"
+                className="text-muted-foreground hover:text-primary transition-colors hover:underline"
+              >
+                +971 50 4767628
+              </a>
+            </div>
+            <div className="text-muted-foreground flex items-center text-sm">
+              <Linkedin className="mr-2 h-3 w-3 sm:h-4 sm:w-4" />
+              <a
+                href="https://www.linkedin.com/company/simplifiiq/"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-muted-foreground hover:text-primary transition-colors hover:underline"
               >
-                /adarshaacharya
+                Simplifi-IQ
               </a>
             </div>
           </div>
@@ -211,11 +222,16 @@ export function CTASection() {
       </div>
 
       <p className="text-muted-foreground absolute bottom-2 left-1/2 w-full -translate-x-1/2 transform text-center text-xs sm:bottom-4 sm:text-sm">
-        © {new Date().getFullYear()} Built by{" "}
-        <a href="https://adarsha.dev" className="text-primary">
-          Adarsha Acharya
+        {"© "}{new Date().getFullYear()}{" "}
+        <a
+          href="https://www.simplifiiq.com"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-primary"
+        >
+          Simplifi-IQ
         </a>
-        . All rights reserved.
+        {". All rights reserved."}
       </p>
     </section>
   );
